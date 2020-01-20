@@ -10,10 +10,10 @@ export default NavBar = () => {
             alignItems: 'center',
             }}>
             <StatusBar  barStyle="light-content" translucent={true} />
-            <Text style={{color:'#EEEEEE', fontSize: 22, marginBottom: 8, marginLeft: 4, fontWeight: 'bold'}}>
+            <Text style={{color:'#EEEEEE', fontSize: 20, marginBottom: 8, marginLeft: 4, fontWeight: 'bold'}}>
               Ventas 
               <Image 
-              style={{marginLeft:8, marginBottom: -2, tintColor: 'white', resizeMode: "contain"}}
+              style={{marginLeft:9, marginBottom: -1.5, tintColor: 'white', resizeMode: "contain"}}
               source={require('./../assets/dropdown3.png')}/>
               </Text>
           </View>
