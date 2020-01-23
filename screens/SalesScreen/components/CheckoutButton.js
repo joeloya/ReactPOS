@@ -1,7 +1,7 @@
 import React from "react";
-import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import {View, Text, StyleSheet, TouchableOpacity, ShadowPropTypesIOS} from "react-native";
 
-const CheckoutButton = () => {
+const CheckoutButton = (props) => {
     return (
         <TouchableOpacity onPress={() => console.log('cobrar')}>
             <View style={styles.checkoutButtonContainer}>
@@ -16,7 +16,7 @@ const CheckoutButton = () => {
                         color:'#EEEEEE',
                         fontSize: 24,
                         fontWeight: 'bold'
-                    }}>$74.00</Text>
+                    }}>{props.ammount}</Text>
             </View>
         </TouchableOpacity>
     )
