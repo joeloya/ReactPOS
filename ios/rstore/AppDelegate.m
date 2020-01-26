@@ -11,6 +11,11 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 
+/*
+ override var prefersHomeIndicatorAutoHidden: Bool {
+     return true
+ }
+ */
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

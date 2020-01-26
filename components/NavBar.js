@@ -8,6 +8,7 @@ export default NavBar = () => {
             backgroundColor: '#e62e09',
             justifyContent: 'flex-end',
             alignItems: 'center',
+            flexDirection: 'column',
             }}>
             <StatusBar  barStyle="light-content" translucent={true} />
             <Text style={{color:'#EEEEEE', fontSize: 20, marginBottom: 8, marginLeft: 4, fontWeight: 'bold'}}>

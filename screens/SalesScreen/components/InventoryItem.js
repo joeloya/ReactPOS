@@ -17,8 +17,8 @@ export default InventoryItem;
 
 const styles = StyleSheet.create({
     inventoryCard: {
-        width: 200, 
-        height: 180, 
+        width: 195, 
+        height: 175, 
         borderWidth:2, 
         borderColor: 'lightgrey', 
         backgroundColor: 'rgba(255,255,255,.75)',

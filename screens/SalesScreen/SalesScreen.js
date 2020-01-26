@@ -15,6 +15,38 @@ const InventoryItems = (props) => {
     );
 }
 
+const CategoriesList = () => {
+
+    const categories = ['Todos', 'Tortillas', 'Cremeria', 'Abarrotes', 'Carnes', 'Panaderia', 'Cocina']
+    const activeCategory = 'Todos';
+
+    return (
+        <>
+        { categories.map((category, index) => (
+            <View
+                key={index} 
+                style={{
+                height: 80,
+                minWidth: 180,
+                backgroundColor: activeCategory === category ? 'rgb(77,77,77)' : null,
+                justifyContent: 'center',
+                alignItems: 'center',
+                
+                }
+            }>
+                    <Text style={{
+                        fontSize: 18,
+                        color: 'rgb(222,222,222)',
+                    }}>
+                        {category}
+                    </Text>
+            </View>
+        ))}
+        <View style={{height: 80, width: 150}}></View>
+        </>
+    );
+}
+
 class SalesScreen extends React.Component {
 
     constructor(){
@@ -38,9 +70,17 @@ class SalesScreen extends React.Component {
     }
 
     handleItemPress = (item) => {
+
+        function createCheckoutItem(inventoryItem) {
+            return {
+                title: inventoryItem.title,
+                price: inventoryItem.price,
+                quantity: 1,
+            }
+        }
         console.log(item);
         // First find if item.title not already on checkoutItems
-        matchIndex = -1;
+        let matchIndex = -1;
         this.state.checkoutItems.some((checkoutItem, index) => {
             if (checkoutItem.title === item.title) {
                 matchIndex = index;
@@ -59,13 +99,8 @@ class SalesScreen extends React.Component {
                 checkoutItems: newCheckoutItems
             })
         }else{
-            let newCheckoutItems = [...this.state.checkoutItems];
-            let newCheckoutItem = {
-                title: item.title,
-                price: item.price,
-                quantity: 1,
-            }
-            newCheckoutItems.push(newCheckoutItem);
+            let newCheckoutItem = createCheckoutItem(item);
+            let newCheckoutItems = [...this.state.checkoutItems, newCheckoutItem];
             this.setState({
                 checkoutItems: newCheckoutItems
             })
@@ -80,11 +115,42 @@ class SalesScreen extends React.Component {
         return (
         <>
             <View style={styles.inventoryItems}>
-                <ScrollView>
+                <ScrollView style={{flex: 1, padding: 16 }}>
                     <View style={styles.inventoryItemsScrollViewWrapper}>
                         <InventoryItems items={this.state.inventoryItems} onPress={this.handleItemPress} />
                     </View>
                 </ScrollView>
+                <View style={{
+                    height: 100,
+                    paddingLeft: 10,
+                    backgroundColor: 'rgb(32,32,32)',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row', 
+                    borderTopWidth: 1, 
+                    borderTopColor: 'rgb(55,55,55)'}}>
+                    <ScrollView horizontal contentContainerStyle={{alignItems: 'center'}}>
+                    <CategoriesList/>
+                    </ScrollView>
+                    <View style={{
+                        height: 100,
+                        right: 0,
+                        width: 75,
+                        position: "absolute",
+                        backgroundColor: 'rgb(32,32,32)',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <View style={{
+                            width: '100%', 
+                            borderLeftWidth: 2,
+                            borderLeftColor: 'rgb(77,77,77)',
+                            height: 70, justifyContent: 'center',
+                            alignItems: 'center'}}>
+                       <Text style={{fontSize: 25, color: 'rgb(222,222,222)'}}>></Text>
+                       </View>
+                    </View>
+                </View>
             </View>
             <View style={styles.bill}>
                 <ScrollView style={styles.billLineItems}>
@@ -106,7 +172,7 @@ const styles = StyleSheet.create({
         flex:1,
         flexGrow:4,
         backgroundColor: '#EEE',
-        padding: 16,
+        flexDirection: 'column',
     },
     inventoryItemsScrollViewWrapper: {
         flexDirection: 'row',
@@ -115,13 +181,12 @@ const styles = StyleSheet.create({
     bill: {
         flex:1,
         flexGrow:2,
-        borderLeftWidth: 1,
-        borderLeftColor: 'lightgrey',
-        justifyContent: 'flex-start',
     },
     billLineItems: {
         flex:1,
         flexDirection: 'column',
+        borderLeftWidth: 1,
+        borderLeftColor: 'lightgrey',
     },
 });
 
