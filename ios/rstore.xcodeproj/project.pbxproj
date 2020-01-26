@@ -12,6 +12,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		32F4A2AA23DD21B6005E8F6E /* extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32F4A2A923DD21B6005E8F6E /* extensions.swift */; };
 		47F530897189FF4E056E6151 /* libPods-rstore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D74ABDFEBCD3B32364FAE8C4 /* libPods-rstore.a */; };
 		AFC84FB028C88BE0E9571008 /* libPods-rstoreTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A0D7FCFE23591D98550AA7E /* libPods-rstoreTests.a */; };
 /* End PBXBuildFile section */
@@ -39,6 +40,8 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = rstore/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = rstore/main.m; sourceTree = "<group>"; };
 		216B3DC28D7CC11DE59A24BE /* Pods-rstore-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rstore-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-rstore-tvOSTests/Pods-rstore-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		32F4A2A823DD21B6005E8F6E /* rstore-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "rstore-Bridging-Header.h"; sourceTree = "<group>"; };
+		32F4A2A923DD21B6005E8F6E /* extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = extensions.swift; sourceTree = "<group>"; };
 		441DE0F196C97FD687459A0A /* libPods-rstore-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rstore-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		60A205907C7070FACA7D99A5 /* Pods-rstore-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-rstore-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-rstore-tvOS/Pods-rstore-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		7EBDE0BE9FFC4C23E7757111 /* libPods-rstore-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-rstore-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +104,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				32F4A2A923DD21B6005E8F6E /* extensions.swift */,
+				32F4A2A823DD21B6005E8F6E /* rstore-Bridging-Header.h */,
 			);
 			name = rstore;
 			sourceTree = "<group>";
@@ -222,6 +227,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 29K344SY64;
+						LastSwiftMigration = 1120;
 					};
 				};
 			};
@@ -359,6 +365,7 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				32F4A2AA23DD21B6005E8F6E /* extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -389,6 +396,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ABE93B709F75F3CD79DC09E4 /* Pods-rstoreTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = 29K344SY64;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -413,6 +421,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DCE9C6F59159F26F3663FFB6 /* Pods-rstoreTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 29K344SY64;
@@ -435,6 +444,7 @@
 			baseConfigurationReference = 93E2DC3EF1C05602E53D4499 /* Pods-rstore.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 29K344SY64;
@@ -447,6 +457,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = rstore;
+				SWIFT_OBJC_BRIDGING_HEADER = "rstore-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -457,6 +470,7 @@
 			baseConfigurationReference = B0F55D8070A224E627DF92F9 /* Pods-rstore.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 29K344SY64;
 				INFOPLIST_FILE = rstore/Info.plist;
@@ -468,6 +482,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = rstore;
+				SWIFT_OBJC_BRIDGING_HEADER = "rstore-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -502,6 +518,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -555,6 +572,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
+				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
