@@ -1,7 +1,7 @@
 import React from "react";
 import {View, Image, Text, TouchableOpacity, StyleSheet} from "react-native";
 
-const InventoryItem = (props) => {
+const ProductCard = (props) => {
     console.log("render InventoryItem");
     return (
         <TouchableOpacity onPress={props.onPress}>
@@ -13,7 +13,7 @@ const InventoryItem = (props) => {
     )
 }
 
-export default InventoryItem;
+export default React.memo(ProductCard);
 
 const styles = StyleSheet.create({
     inventoryCard: {

@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import {View, Text, Image, StyleSheet, ScrollView} from "react-native";
 import CheckoutLineItem from "./components/CheckoutLineItem";
 import CheckoutButton from "./components/CheckoutButton";
-import InventoryItem from "./components/InventoryItem";
+import ProductCard from "./components/ProductCard";
 import CategoryButton from "./components/CategoryButton";
 
 
 const SalesScreen = (props) => {
 
+    // - PROPERTIES
     const mockProducts = [
         {title: "T. Maiz 1kg", price: 18.11, imageSource: require("./../../assets/tortilla-maiz.jpg")},
         {title: "T. Blanca 1kg", price: 38.22, imageSource: require("./../../assets/tortilla-maiz.jpg")},
@@ -27,12 +28,19 @@ const SalesScreen = (props) => {
     const [activeCategory, setActiveCategory] = useState('');
     const [invoiceItems, setInvoiceItems] = useState([]); 
 
+    // computed state
+    const _invoiceTotal = () => {
+        return invoiceItems.reduce((prev,current) => { return prev + (current.price * current.quantity)}, 0).toFixed(2)
+    }
+
+    // - LIFECYCLE
     useEffect(() => {
         setProducts(mockProducts)
         setCategories(mockCategories)
         setActiveCategory(mockActiveCategory)
     },[])
 
+    // - EVENT HANDLERS
     handleItemPress = (item) => {
 
         function createInvoiceItem(invoiceItem) {
@@ -68,26 +76,24 @@ const SalesScreen = (props) => {
         }
     }
 
-    checkoutAmmount = () => {
-        return invoiceItems.reduce((prev,current) => { return prev + (current.price * current.quantity)}, 0).toFixed(2)
-    }
-
-    const InventoryItems = (props) => {
-        const {items} = props;
-        return (
-            <>
-                {items.map((item, index) => (
-                    <InventoryItem key={index} itemTitle={item.title} itemImageSource={item.imageSource} onPress={() => props.onPress(item)} />
-                ))}
-            </>
-        );
-    }
-
     const handleCategoryButtonPress = (category) => {
         setActiveCategory(category);
     }
 
-    const CategoriesList = (props) => {
+    // - JSX
+    const ProductsWrapper = React.memo((props) => {
+        console.log("rendering products wrapper");
+        const {items} = props;
+        return (
+            <>
+                {items.map((item, index) => (
+                    <ProductCard key={index} itemTitle={item.title} itemImageSource={item.imageSource} onPress={() => props.onPress(item)} />
+                ))}
+            </>
+        );
+    });
+
+    const CategoriesWrapper = React.memo((props) => {
 
         const {categories, activeCategory} = props;
     
@@ -104,44 +110,23 @@ const SalesScreen = (props) => {
             <View style={{height: 80, width: 150}}></View>
             </>
         );
-    }
+    });
 
     return (
         <>
-            <View style={styles.inventoryItems}>
-                <ScrollView style={{flex: 1, padding: 16 }}>
-                    <View style={styles.inventoryItemsScrollViewWrapper}>
-                        <InventoryItems items={products} onPress={this.handleItemPress} />
+            <View style={styles.productsContainer}>
+                <ScrollView style={styles.productsScrollViewWrapper}>
+                    <View style={styles.productsListWrapper}>
+                        <ProductsWrapper items={products} onPress={this.handleItemPress} />
                     </View>
                 </ScrollView>
-                <View style={{
-                    height: 100,
-                    paddingLeft: 10,
-                    backgroundColor: 'rgb(32,32,32)',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'row', 
-                    borderTopWidth: 1, 
-                    borderTopColor: 'rgb(55,55,55)'}}>
+                <View style={styles.categoriesContainer}>
                     <ScrollView horizontal contentContainerStyle={{alignItems: 'center'}}>
-                    <CategoriesList categories={categories} activeCategory={activeCategory} />
+                        <CategoriesWrapper categories={categories} activeCategory={activeCategory} />
                     </ScrollView>
-                    <View style={{
-                        height: 100,
-                        right: 0,
-                        width: 75,
-                        position: "absolute",
-                        backgroundColor: 'rgb(32,32,32)',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <View style={{
-                            width: '100%', 
-                            borderLeftWidth: 2,
-                            borderLeftColor: 'rgb(77,77,77)',
-                            height: 70, justifyContent: 'center',
-                            alignItems: 'center'}}>
-                        <Text style={{fontSize: 25, color: 'rgb(222,222,222)'}}>></Text>
+                    <View style={styles.categoriesOverlayContainer}>
+                        <View style={styles.categoriesOverlay}>
+                            <Text style={styles.categoriesOverlayText}>></Text>
                         </View>
                     </View>
                 </View>
@@ -152,7 +137,7 @@ const SalesScreen = (props) => {
                         <CheckoutLineItem key={index} itemTitle={item.title} itemPrice={item.price} itemQuantity={item.quantity}/>
                     ))}
                 </ScrollView>
-                <CheckoutButton ammount={this.checkoutAmmount()}/>
+                <CheckoutButton ammount={_invoiceTotal()}/>
             </View>
         </>
     );
@@ -161,15 +146,49 @@ const SalesScreen = (props) => {
 export default SalesScreen;
 
 const styles = StyleSheet.create({
-    inventoryItems: {
+    productsContainer: {
         flex:1,
         flexGrow:4,
         backgroundColor: '#EEE',
         flexDirection: 'column',
     },
-    inventoryItemsScrollViewWrapper: {
+    productsScrollViewWrapper: {
+        flex: 1,
+        padding: 16,
+    },
+    productsListWrapper: {
         flexDirection: 'row',
         flexWrap: 'wrap',
+    },
+    categoriesContainer: {
+        height: 100,
+        paddingLeft: 10,
+        backgroundColor: 'rgb(32,32,32)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'row', 
+        borderTopWidth: 1, 
+        borderTopColor: 'rgb(55,55,55)'
+    },
+    categoriesOverlayContainer: {
+        height: 100,
+        right: 0,
+        width: 75,
+        position: "absolute",
+        backgroundColor: 'rgb(32,32,32)',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    categoriesOverlay: {
+        width: '100%', 
+        borderLeftWidth: 2,
+        borderLeftColor: 'rgb(77,77,77)',
+        height: 79, justifyContent: 'center',
+        alignItems: 'center'
+    },
+    categoriesOverlayText: {
+        fontSize: 25, 
+        color: 'rgb(222,222,222)'
     },
     bill: {
         flex:1,
