@@ -1,128 +1,108 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import {View, Text, Image, StyleSheet, ScrollView} from "react-native";
 import CheckoutLineItem from "./components/CheckoutLineItem";
 import CheckoutButton from "./components/CheckoutButton";
 import ProductCard from "./components/ProductCard";
 import CategoryButton from "./components/CategoryButton";
+import {SalesContext} from "./../../contexts/SalesContext";
+
+const _ProductsView = (props) => {
+    const { products, addNewItem } = useContext(SalesContext);
+    console.log("ProductsView render");
+
+    handleButtonPress = (item) => {
+        addNewItem(item);
+    }
+
+    return (
+        <>
+            {products.map((item, index) => (
+                <ProductCard key={index} itemTitle={item.title} itemImageSource={item.imageSource} onPress={() => handleButtonPress(item)} />
+            ))}
+        </>
+    );
+}
+const ProductsView = React.memo(_ProductsView, (prev, next) => {console.log('mmm', prev, next)});
+
+const CategoriesView = React.memo((props) => {
+    const { categories, activeCategory, setActiveCategory, products, setProducts } = useContext(SalesContext);
+
+    handleCategoryButtonPress = (category) => {
+
+        function getRandom(arr, n) {
+            var result = new Array(n),
+                len = arr.length,
+                taken = new Array(len);
+            if (n > len)
+                throw new RangeError("getRandom: more elements taken than available");
+            while (n--) {
+                var x = Math.floor(Math.random() * len);
+                result[n] = arr[x in taken ? taken[x] : x];
+                taken[x] = --len in taken ? taken[len] : len;
+            }
+            return result;
+        }
+
+        setActiveCategory(category);
+
+        const numberOfRandomProducts = Math.floor(Math.random() * products.length);
+        const randomProducts = getRandom(products, numberOfRandomProducts);
+        setProducts(randomProducts);
+
+    }
+
+    return (
+        <>
+        { categories.map((category, index) => (
+            <CategoryButton 
+                key={index}
+                category={category} 
+                activeCategory={activeCategory}
+                onPress={() => handleCategoryButtonPress(category)}
+            />
+        ))}
+        <View style={{height: 80, width: 150}}></View>
+        </>
+    );
+});
+
+const InvoiceView = (props) => {
+    const { invoiceItems } = useContext(SalesContext);
 
 
-const SalesScreen = (props) => {
-
-    // - PROPERTIES
-    const mockProducts = [
-        {title: "T. Maiz 1kg", price: 18.11, imageSource: require("./../../assets/tortilla-maiz.jpg")},
-        {title: "T. Blanca 1kg", price: 38.22, imageSource: require("./../../assets/tortilla-maiz.jpg")},
-        {title: "T. Mantequilla 1kg", price: 38.33, imageSource: require("./../../assets/tortilla-maiz.jpg")},
-        {title: "T. Maiz 1/2kg", price: 18.50, imageSource: require("./../../assets/tortilla-maiz.jpg")},
-        {title: "T. Blanca 1/2kg", price: 38.51, imageSource: require("./../../assets/tortilla-maiz.jpg")},
-        {title: "Totopos", price: 18.01, imageSource: require("./../../assets/tortilla-maiz.jpg")},
-    ]
-    const mockCategories = ['Todos', 'Tortillas', 'Cremeria', 'Abarrotes', 'Carnes', 'Panaderia', 'Cocina']
-    const mockActiveCategory = 'Tortillas';
-
-    // screen input state
-    const [products, setProducts] = useState([]);
-    const [categories, setCategories] = useState([]);
-
-    // internal state
-    const [activeCategory, setActiveCategory] = useState('');
-    const [invoiceItems, setInvoiceItems] = useState([]); 
-
-    // computed state
     const _invoiceTotal = () => {
         return invoiceItems.reduce((prev,current) => { return prev + (current.price * current.quantity)}, 0).toFixed(2)
     }
 
-    // - LIFECYCLE
-    useEffect(() => {
-        setProducts(mockProducts)
-        setCategories(mockCategories)
-        setActiveCategory(mockActiveCategory)
-    },[])
 
-    // - EVENT HANDLERS
-    handleItemPress = (item) => {
+    return (
+        <>
+        <ScrollView style={styles.billLineItems}>
+        { invoiceItems.map( (item, index) => (
+            <CheckoutLineItem key={index} itemTitle={item.title} itemPrice={item.price} itemQuantity={item.quantity}/>
+        ))}
+        </ScrollView>
+        <CheckoutButton ammount={_invoiceTotal()}/>
+        </>
+    );
+}
 
-        function createInvoiceItem(invoiceItem) {
-            return {
-                title: invoiceItem.title,
-                price: invoiceItem.price,
-                quantity: 1,
-            }
-        }
+const SalesScreen = (props) => {
 
-        // 1 - First find if item already in current invoice
-        let matchIndex = -1;
-        invoiceItems.some((invoiceItem, index) => {
-            if (invoiceItem.title === item.title) {
-                matchIndex = index;
-                return true;
-            }else{
-                return false;
-            }
-        })
-
-        // If item already in current invoice, increment quantity
-        // If not add new item
-
-        if (matchIndex > -1 && invoiceItems[matchIndex]){
-            let newInvoiceItems = [...invoiceItems];
-            newInvoiceItems[matchIndex].quantity = newInvoiceItems[matchIndex].quantity + 1;
-            setInvoiceItems(newInvoiceItems);
-        }else{
-            let newInvoiceItem = createInvoiceItem(item);
-            let newInvoiceItems = [...invoiceItems, newInvoiceItem];
-            setInvoiceItems(newInvoiceItems);
-        }
-    }
-
-    const handleCategoryButtonPress = (category) => {
-        setActiveCategory(category);
-    }
+    console.log("Sales Screen render");
 
     // - JSX
-    const ProductsWrapper = React.memo((props) => {
-        console.log("rendering products wrapper");
-        const {items} = props;
-        return (
-            <>
-                {items.map((item, index) => (
-                    <ProductCard key={index} itemTitle={item.title} itemImageSource={item.imageSource} onPress={() => props.onPress(item)} />
-                ))}
-            </>
-        );
-    });
-
-    const CategoriesWrapper = React.memo((props) => {
-
-        const {categories, activeCategory} = props;
-    
-        return (
-            <>
-            { categories.map((category, index) => (
-                <CategoryButton 
-                    key={index}
-                    category={category} 
-                    activeCategory={activeCategory}
-                    onPress={() => handleCategoryButtonPress(category)}
-                />
-            ))}
-            <View style={{height: 80, width: 150}}></View>
-            </>
-        );
-    });
-
     return (
         <>
             <View style={styles.productsContainer}>
                 <ScrollView style={styles.productsScrollViewWrapper}>
                     <View style={styles.productsListWrapper}>
-                        <ProductsWrapper items={products} onPress={this.handleItemPress} />
+                        <ProductsView />
                     </View>
                 </ScrollView>
                 <View style={styles.categoriesContainer}>
                     <ScrollView horizontal contentContainerStyle={{alignItems: 'center'}}>
-                        <CategoriesWrapper categories={categories} activeCategory={activeCategory} />
+                        <CategoriesView/>
                     </ScrollView>
                     <View style={styles.categoriesOverlayContainer}>
                         <View style={styles.categoriesOverlay}>
@@ -132,12 +112,7 @@ const SalesScreen = (props) => {
                 </View>
             </View>
             <View style={styles.bill}>
-                <ScrollView style={styles.billLineItems}>
-                    { invoiceItems.map( (item, index) => (
-                        <CheckoutLineItem key={index} itemTitle={item.title} itemPrice={item.price} itemQuantity={item.quantity}/>
-                    ))}
-                </ScrollView>
-                <CheckoutButton ammount={_invoiceTotal()}/>
+                <InvoiceView />
             </View>
         </>
     );

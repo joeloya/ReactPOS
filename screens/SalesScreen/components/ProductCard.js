@@ -4,7 +4,7 @@ import {View, Image, Text, TouchableOpacity, StyleSheet} from "react-native";
 const ProductCard = (props) => {
     console.log("render InventoryItem");
     return (
-        <TouchableOpacity onPress={props.onPress}>
+        <TouchableOpacity onPress={() => {console.log('jeje')}}>
             <View style={styles.inventoryCard}>
                 <Image resizeMode="cover" style={{width: 200, height: 130}} source={props.itemImageSource}/>
                 <Text style={{fontSize: 16, fontWeight:'500',}} numberOfLines={1}>{props.itemTitle}</Text>
@@ -13,7 +13,7 @@ const ProductCard = (props) => {
     )
 }
 
-export default React.memo(ProductCard);
+export default React.memo(ProductCard, (prev, next) => { return prev.itemTitle===next.itemTitle });
 
 const styles = StyleSheet.create({
     inventoryCard: {
