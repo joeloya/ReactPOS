@@ -51,7 +51,7 @@ export default withModal = (modalTitle) => WrappedComponent => {
                                 {modalTitle}
                             </Text>
                         </View>
-                        <View style={{padding: 25}}>
+                        <View style={{padding: 25, flex: 1}}>
                             <WrappedComponent {...this.props} />
                         </View>
                     </View></>);
@@ -60,3 +60,5 @@ export default withModal = (modalTitle) => WrappedComponent => {
     return withModal;
 
 }
+
+// TODO: Put X on the leftside

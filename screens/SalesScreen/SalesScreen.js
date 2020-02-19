@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState, useEffect } from "react";
+import React, { useContext, createContext, useState, useEffect, useMemo } from "react";
 import {View, Text, Image, StyleSheet, ScrollView} from "react-native";
 import CheckoutLineItem from "./components/CheckoutLineItem";
 import CheckoutButton from "./components/CheckoutButton";
@@ -67,6 +67,10 @@ const SalesScreen = (props) => {
         setIsPaying(false);
     }
 
+    const invoiceTotal = useMemo(() => {
+        return invoiceItems.reduce((prev,current) => { return prev + (current.price * current.quantity)}, 0).toFixed(2)
+    }, [invoiceItems]);
+
     const salesScreenAPI = {
         products,
         setProducts,
@@ -78,14 +82,15 @@ const SalesScreen = (props) => {
         setInvoiceItems,
         addNewItem,
         isPaying,
-        setIsPaying
+        setIsPaying,
+        invoiceTotal
     }
 
     // - JSX
     return (
         <SalesContext.Provider value={salesScreenAPI}>
             { isPaying
-            ? (<PayScreenModal onPress={() => onPayPress()} />)
+            ? (<PayScreenModal onPress={() => onPayPress()} total={invoiceTotal} />)
             : (<></>
             )
             }
@@ -173,11 +178,7 @@ const CategoriesView = (props) => {
 }
 
 const InvoiceView = (props) => {
-const { invoiceItems, setIsPaying } = useContext(SalesContext);
-
-    const _invoiceTotal = () => {
-        return invoiceItems.reduce((prev,current) => { return prev + (current.price * current.quantity)}, 0).toFixed(2)
-    }
+const { invoiceItems, setIsPaying, invoiceTotal } = useContext(SalesContext);
 
     handleCheckoutButtonPress = () => {
         setIsPaying(true);
@@ -191,7 +192,7 @@ const { invoiceItems, setIsPaying } = useContext(SalesContext);
             <CheckoutLineItem key={index} itemTitle={item.title} itemPrice={item.price} itemQuantity={item.quantity}/>
         ))}
         </ScrollView>
-        <CheckoutButton ammount={_invoiceTotal()} onPress={() => handleCheckoutButtonPress()}/>
+        <CheckoutButton ammount={invoiceTotal} onPress={() => handleCheckoutButtonPress()}/>
         </>
     );
 }
