@@ -1,10 +1,101 @@
-import React, { useContext } from "react";
+import React, { useContext, createContext } from "react";
 import {View, Text, Image, StyleSheet, ScrollView} from "react-native";
 import CheckoutLineItem from "./components/CheckoutLineItem";
 import CheckoutButton from "./components/CheckoutButton";
 import ProductCard from "./components/ProductCard";
 import CategoryButton from "./components/CategoryButton";
-import {SalesContext} from "./../../contexts/SalesContext";
+import {mockProducts, mockCategories, mockActiveCategory} from "../../test/seed";
+
+const SalesContext = createContext(null);
+
+const SalesScreen = (props) => {
+    console.log("Sales Screen render");
+
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [activeCategory, setActiveCategory] = useState('');
+    const [invoiceItems, setInvoiceItems] = useState([]); 
+
+    const addNewItem = (item) => {
+
+        function createInvoiceItem(invoiceItem) {
+            return {
+                title: invoiceItem.title,
+                price: invoiceItem.price,
+                quantity: 1,
+            }
+        }
+
+        // 1 - First find if item already in current invoice
+        let matchIndex = -1;
+        invoiceItems.some((invoiceItem, index) => {
+            if (invoiceItem.title === item.title) {
+                matchIndex = index;
+                return true;
+            }else{
+                return false;
+            }
+        })
+
+        // If item already in current invoice, increment quantity
+        // If not add new item
+
+        if (matchIndex > -1 && invoiceItems[matchIndex]){
+            let newInvoiceItems = [...invoiceItems];
+            newInvoiceItems[matchIndex].quantity = newInvoiceItems[matchIndex].quantity + 1;
+            setInvoiceItems(newInvoiceItems);
+        }else{
+            let newInvoiceItem = createInvoiceItem(item);
+            let newInvoiceItems = [...invoiceItems, newInvoiceItem];
+            setInvoiceItems(newInvoiceItems);
+        }
+    }
+
+    useEffect(() => {
+        console.log("use effect llamado");
+        setProducts(mockProducts)
+        setCategories(mockCategories)
+        setActiveCategory(mockActiveCategory)
+    },[]);
+
+    const salesScreenAPI = {
+        products,
+        setProducts,
+        categories,
+        setCategories,
+        activeCategory,
+        setActiveCategory,
+        invoiceItems,
+        setInvoiceItems,
+        addNewItem,
+    }
+
+    // - JSX
+    return (
+        <SalesContext.Provider value={salesScreenAPI}>
+            <View style={styles.productsContainer}>
+                <ScrollView style={styles.productsScrollViewWrapper}>
+                    <View style={styles.productsListWrapper}>
+                        <ProductsView />
+                    </View>
+                </ScrollView>
+                <View style={styles.categoriesContainer}>
+                    <ScrollView horizontal contentContainerStyle={{alignItems: 'center'}}>
+                        <CategoriesView/>
+                    </ScrollView>
+                    <View style={styles.categoriesOverlayContainer}>
+                        <View style={styles.categoriesOverlay}>
+                            <Text style={styles.categoriesOverlayText}>></Text>
+                        </View>
+                    </View>
+                </View>
+            </View>
+            <View style={styles.bill}>
+                <InvoiceView />
+            </View>
+        </SalesContext.Provider>
+    );
+}
 
 const _ProductsView = (props) => {
     const { products, addNewItem } = useContext(SalesContext);
@@ -87,36 +178,7 @@ const InvoiceView = (props) => {
     );
 }
 
-const SalesScreen = (props) => {
 
-    console.log("Sales Screen render");
-
-    // - JSX
-    return (
-        <>
-            <View style={styles.productsContainer}>
-                <ScrollView style={styles.productsScrollViewWrapper}>
-                    <View style={styles.productsListWrapper}>
-                        <ProductsView />
-                    </View>
-                </ScrollView>
-                <View style={styles.categoriesContainer}>
-                    <ScrollView horizontal contentContainerStyle={{alignItems: 'center'}}>
-                        <CategoriesView/>
-                    </ScrollView>
-                    <View style={styles.categoriesOverlayContainer}>
-                        <View style={styles.categoriesOverlay}>
-                            <Text style={styles.categoriesOverlayText}>></Text>
-                        </View>
-                    </View>
-                </View>
-            </View>
-            <View style={styles.bill}>
-                <InvoiceView />
-            </View>
-        </>
-    );
-}
 
 export default SalesScreen;
 
