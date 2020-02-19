@@ -4,11 +4,12 @@ import NavBar from "./components/NavBar";
 import ScreenRouter from "./components/ScreenRouter";
 
 const App = () => {
+  console.log("App render");
   return (
-    <View style={styles.appContainer}>
-      <NavBar />
-      <ScreenRouter screen="sales" />
-    </View>
+      <View style={styles.appContainer}>
+        <NavBar />
+        <ScreenRouter screen="sales" />
+      </View>
   );
 };
 
