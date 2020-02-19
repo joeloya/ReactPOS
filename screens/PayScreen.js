@@ -6,10 +6,10 @@ const PayScreen = (props) => {
         <View style={{flexGrow: 1}}>
             <View style={{flexBasis: 35, alignItems: 'flex-end', flexDirection: 'row', paddingBottom: 5}}>
                 <View style={{width: 150, marginRight: 20}}>
-                    <Text style={{fontSize:18, fontWeight: 'bold'}}>Due </Text>
+                    <Text style={{fontSize:20, color: 'grey'}}>Due </Text>
                 </View>
                 <View>
-                    <Text style={{fontSize:18}}>Cash </Text>
+                    <Text style={{fontSize:20, fontWeight: 'bold'}}>Cash </Text>
                 </View>     
             </View>
             <View style={{flexGrow: 1, flexDirection: 'row'}}> 
@@ -20,9 +20,18 @@ const PayScreen = (props) => {
                     <PayQuickScreen onPress={props.onPress} total={props.total}  />
                 </View>
             </View>
-            <TouchableOpacity  onPress={props.onPress} style={{height: 70, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'grey', marginRight: 5, marginTop: 20}}>
-                <Text>PAY</Text>
-            </TouchableOpacity>
+            <View style={{flexBasis: 120, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'flex-end'}}>
+                <View>
+                    <TouchableOpacity  onPress={props.onPress} style={styles.cancelButton}>
+                        <Text style={styles.cancelButtonText}>CANCEL</Text>
+                    </TouchableOpacity>
+                </View>
+                <View>
+                    <TouchableOpacity  onPress={props.onPress} style={styles.payButton}>
+                        <Text style={styles.payButtonText}>PAY</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
         </View>
     )
 }
@@ -98,12 +107,12 @@ const PayCustomAmountScreen = (props) => {
 const PayQuickScreen = (props) => {
     return (
         <View style={{flex: 1, justifyContent: 'space-between', marginRight: 5}}>
-            <View style={styles.quickAction}><Text>$ {props.total}</Text></View>
-            <View style={styles.quickAction}><Text>$ 20</Text></View>
-            <View style={styles.quickAction}><Text>$ 50</Text></View>
-            <View style={styles.quickAction}><Text>$ 100</Text></View>
-            <View style={styles.quickAction}><Text>$ 200</Text></View>
-            <View style={styles.quickAction}><Text>$ 500</Text></View>
+            <View style={styles.quickAction}><Text style={styles.quickActionText}>$ {props.total}</Text></View>
+            <View style={styles.quickAction}><Text style={styles.quickActionText}>$ 20</Text></View>
+            <View style={styles.quickAction}><Text style={styles.quickActionText}>$ 50</Text></View>
+            <View style={styles.quickAction}><Text style={styles.quickActionText}>$ 100</Text></View>
+            <View style={styles.quickAction}><Text style={styles.quickActionText}>$ 200</Text></View>
+            <View style={styles.quickAction}><Text style={styles.quickActionText}>$ 500</Text></View>
         </View>
     );
 }
@@ -132,8 +141,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         height: 70,
-        borderWidth:0.5,
-        borderColor: 'grey'
+        borderWidth:3,
+        borderColor: 'rgb(240,203,107)',
+        backgroundColor: 'rgba(240,203,107,0.10)'
     },
     numberPadRow: {
         flexDirection: 'row',
@@ -141,40 +151,73 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     numberPadText: {
-        fontSize: 20
+        fontSize: 18
     },
     balanceDisplay: {
         justifyContent: 'center',
         alignItems: 'flex-end',
         height: 70,
-        borderWidth:1,
+        borderWidth:0.5,
         borderColor: 'grey',
         padding: 10,
         flexBasis: 150,
         marginRight: 20,
     },
     balanceDisplayText:{
-        fontSize: 18,
-        fontWeight: 'bold'
+        fontSize: 20,
+        fontWeight: '400',
+        color: 'grey'
     },
     numberPadDisplay: {
         flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'flex-end',
         height: 70,
-        borderWidth:1,
-        borderColor: 'grey',
+        borderWidth:3,
+        borderColor: 'rgb(240,203,107)',
         padding: 10
     },
     numberPadDisplayText: {
-        fontSize: 18
+        fontSize: 20,
+        fontWeight: 'bold',
     },
     quickAction: {
         height: 70,
         justifyContent: 'center',
         alignItems: 'center',
-        borderWidth:0.5,
-        borderColor: 'grey',
+        backgroundColor: 'rgb(240,203,107)',
         width: 300,
+    },
+    quickActionText: {
+        fontSize: 18,
+    },
+    payButton: {
+        height: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#e62e09',
+        marginRight: 5,
+        marginTop: 20,
+        width: 500,
+    },
+    payButtonText:{
+        color:'#EEEEEE',
+        fontSize: 24,
+        fontWeight: 'bold'
+    },
+    cancelButton: {
+        height: 70,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#e62e09',
+        marginTop: 20,
+        width: 320,
+        marginRight: 20,
+    },
+    cancelButtonText:{
+        color:'#e62e09',
+        fontSize: 24,
+        fontWeight: 'bold'
     }
 })
