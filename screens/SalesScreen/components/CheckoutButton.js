@@ -3,14 +3,14 @@ import {View, Text, StyleSheet, TouchableOpacity, ShadowPropTypesIOS} from "reac
 
 const CheckoutButton = (props) => {
     return (
-        <TouchableOpacity onPress={() => console.log('cobrar')}>
+        <TouchableOpacity onPress={props.onPress}>
             <View style={styles.checkoutButtonContainer}>
                 <Text 
                     style={{
                         color:'#EEEEEE',
                         fontSize: 24,
                         fontWeight: 'bold'
-                    }}>Cobrar</Text>
+                    }}>PAY</Text>
                 <Text 
                     style={{
                         color:'#EEEEEE',

@@ -7,7 +7,6 @@ const App = () => {
   console.log("App render");
   return (
       <View style={styles.appContainer}>
-        <NavBar />
         <ScreenRouter screen="sales" />
       </View>
   );

@@ -5,8 +5,12 @@ import CheckoutButton from "./components/CheckoutButton";
 import ProductCard from "./components/ProductCard";
 import CategoryButton from "./components/CategoryButton";
 import {mockProducts, mockCategories, mockActiveCategory} from "../../test/seed";
+import PayScreen from "./../PayScreen";
+import withModal from "./../../components/hocs/withModal"
 
 const SalesContext = createContext(null);
+
+const PayScreenModal = withModal("PAYMENT")(PayScreen);
 
 const SalesScreen = (props) => {
     console.log("Sales Screen render");
@@ -15,6 +19,7 @@ const SalesScreen = (props) => {
     const [categories, setCategories] = useState([]);
     const [activeCategory, setActiveCategory] = useState('');
     const [invoiceItems, setInvoiceItems] = useState([]); 
+    const [isPaying, setIsPaying] = useState(false);
 
     const addNewItem = (item) => {
 
@@ -58,6 +63,10 @@ const SalesScreen = (props) => {
         setActiveCategory(mockActiveCategory)
     },[]);
 
+    const onPayPress = () => {
+        setIsPaying(false);
+    }
+
     const salesScreenAPI = {
         products,
         setProducts,
@@ -68,11 +77,18 @@ const SalesScreen = (props) => {
         invoiceItems,
         setInvoiceItems,
         addNewItem,
+        isPaying,
+        setIsPaying
     }
 
     // - JSX
     return (
         <SalesContext.Provider value={salesScreenAPI}>
+            { isPaying
+            ? (<PayScreenModal onPress={() => onPayPress()} />)
+            : (<></>
+            )
+            }
             <View style={styles.productsContainer}>
                 <ScrollView style={styles.productsScrollViewWrapper}>
                     <View style={styles.productsListWrapper}>
@@ -97,7 +113,7 @@ const SalesScreen = (props) => {
     );
 }
 
-const _ProductsView = (props) => {
+const ProductsView = (props) => {
     const { products, addNewItem } = useContext(SalesContext);
     console.log("ProductsView render");
 
@@ -113,9 +129,8 @@ const _ProductsView = (props) => {
         </>
     );
 }
-const ProductsView = React.memo(_ProductsView, (prev, next) => {console.log('mmm', prev, next)});
 
-const CategoriesView = React.memo((props) => {
+const CategoriesView = (props) => {
     const { categories, activeCategory, setActiveCategory, products, setProducts } = useContext(SalesContext);
 
     handleCategoryButtonPress = (category) => {
@@ -139,7 +154,7 @@ const CategoriesView = React.memo((props) => {
         const numberOfRandomProducts = Math.floor(Math.random() * products.length);
         const randomProducts = getRandom(products, numberOfRandomProducts);
         setProducts(randomProducts);
-
+        
     }
 
     return (
@@ -155,14 +170,17 @@ const CategoriesView = React.memo((props) => {
         <View style={{height: 80, width: 150}}></View>
         </>
     );
-});
+}
 
 const InvoiceView = (props) => {
-    const { invoiceItems } = useContext(SalesContext);
-
+const { invoiceItems, setIsPaying } = useContext(SalesContext);
 
     const _invoiceTotal = () => {
         return invoiceItems.reduce((prev,current) => { return prev + (current.price * current.quantity)}, 0).toFixed(2)
+    }
+
+    handleCheckoutButtonPress = () => {
+        setIsPaying(true);
     }
 
 
@@ -173,7 +191,7 @@ const InvoiceView = (props) => {
             <CheckoutLineItem key={index} itemTitle={item.title} itemPrice={item.price} itemQuantity={item.quantity}/>
         ))}
         </ScrollView>
-        <CheckoutButton ammount={_invoiceTotal()}/>
+        <CheckoutButton ammount={_invoiceTotal()} onPress={() => handleCheckoutButtonPress()}/>
         </>
     );
 }
