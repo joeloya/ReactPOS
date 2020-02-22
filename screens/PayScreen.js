@@ -67,6 +67,12 @@ const PayScreen = (props) => {
   );
 };
 
+Number.prototype.toFixedDown = function (digits) {
+  var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+    m = this.toString().match(re);
+  return m ? parseFloat(m[1]) : this.valueOf();
+};
+
 const PayCustomAmountScreen = (props) => {
   const { amount, setAmount } = useContext(PayScreenContext);
   const formattedAmount = amount.toFixed(2);
@@ -78,6 +84,17 @@ const PayCustomAmountScreen = (props) => {
 
   function addDoubleZero () {
     let newAmount = amount * 100;
+    setAmount(newAmount);
+  }
+
+  function removeDigit () {
+    console.log(amount);
+    let newAmount = amount * 0.1;
+    console.log(newAmount);
+    newAmount = newAmount.toFixedDown(2);
+    console.log(newAmount);
+    newAmount = parseFloat(newAmount);
+    console.log(newAmount);
     setAmount(newAmount);
   }
 
@@ -140,9 +157,9 @@ const PayCustomAmountScreen = (props) => {
             style={styles.numberPad}>
             <Text style={styles.numberPadText}>00</Text>
           </TouchableOpacity>
-          <View style={styles.numberPad}>
+          <TouchableOpacity onPress={() => removeDigit()} style={styles.numberPad}>
             <Text style={styles.numberPadText}>x</Text>
-          </View>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.numberPadRow} />
