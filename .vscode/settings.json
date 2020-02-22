@@ -1,0 +1,6 @@
+{
+    "react-native.ios.runArguments.simulator": [
+        "--simulator",
+        "iPad Pro (12.9-inch)"
+    ]
+}
