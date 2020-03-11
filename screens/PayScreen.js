@@ -3,6 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const PayScreenContext = createContext(null);
 
+Number.prototype.toFixedDown = function (digits) {
+  var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
+    m = this.toString().match(re);
+  return m ? parseFloat(m[1]) : this.valueOf();
+};
+
 const PayScreen = (props) => {
   const [amount, setAmount] = useState(0);
 
@@ -13,6 +19,7 @@ const PayScreen = (props) => {
 
   const amountDue = props.total || 0;
   const amountDueIsPaid = amount >= amountDue;
+  const amountLeft = (-1 * amountDue + amount).toFixed(2);
 
   return (
     <PayScreenContext.Provider value={payScreenAPI}>
@@ -34,6 +41,9 @@ const PayScreen = (props) => {
         <View style={{ flexGrow: 1, flexDirection: "row" }}>
           <View style={{ flexGrow: 1 }}>
             <PayCustomAmountScreen onPress={props.onPress} total={props.total} />
+            <Text style={{ height: 32, fontSize: 22, textAlign: "right" }}>
+              Change: {amountLeft}
+            </Text>
           </View>
           <View style={{ flexGrow: 1.15, alignItems: "flex-end" }}>
             <PayQuickScreen onPress={props.onPress} total={props.total} />
@@ -65,12 +75,6 @@ const PayScreen = (props) => {
       </View>
     </PayScreenContext.Provider>
   );
-};
-
-Number.prototype.toFixedDown = function (digits) {
-  var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
-    m = this.toString().match(re);
-  return m ? parseFloat(m[1]) : this.valueOf();
 };
 
 const PayCustomAmountScreen = (props) => {
