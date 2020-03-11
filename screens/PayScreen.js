@@ -1,13 +1,13 @@
 import React, { createContext, useState, useContext } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
-const PayScreenContext = createContext(null);
-
 Number.prototype.toFixedDown = function (digits) {
   var re = new RegExp("(\\d+\\.\\d{" + digits + "})(\\d)"),
     m = this.toString().match(re);
   return m ? parseFloat(m[1]) : this.valueOf();
 };
+
+const PayScreenContext = createContext(null);
 
 const PayScreen = (props) => {
   const [amount, setAmount] = useState(0);
@@ -57,7 +57,7 @@ const PayScreen = (props) => {
             alignItems: "flex-end"
           }}>
           <View>
-            <TouchableOpacity onPress={props.onPress} style={styles.cancelButton}>
+            <TouchableOpacity onPress={props.onCancelPayPress} style={styles.cancelButton}>
               <Text style={styles.cancelButtonText}>CANCEL</Text>
             </TouchableOpacity>
           </View>
@@ -65,7 +65,7 @@ const PayScreen = (props) => {
             <TouchableOpacity
               disabled={!amountDueIsPaid}
               style={amountDueIsPaid ? styles.payButton : styles.disabledPayButton}
-              onPress={props.onPress}>
+              onPress={() => props.onPayPress(amountLeft)}>
               <Text style={amountDueIsPaid ? styles.payButtonText : styles.disabledPayButtonText}>
                 PAY
               </Text>
@@ -187,7 +187,7 @@ const PayQuickScreen = (props) => {
   return (
     <View style={{ flex: 1, justifyContent: "space-between", marginRight: 5 }}>
       <TouchableOpacity onPress={() => setAmount(totalFloat)} style={styles.quickAction}>
-        <Text style={styles.quickActionText}>$ {props.total}</Text>
+        <Text style={styles.quickActionText}>EXACT</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => onQuickButtonPress(20)} style={styles.quickAction}>
         <Text style={styles.quickActionText}>$ 20</Text>
